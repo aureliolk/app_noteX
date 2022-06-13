@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;800;900&display=swap');
+@tailwind base;
+body{
+    @apply bg-slate-900 font-Inter
+}
+@tailwind components;
+.code-highlight {
+    border-radius: 0.25rem;
+    padding: 0.125rem 0.1875rem;
+    margin: 0 -0.1875rem;
+    --tw-text-opacity: 1;
+    color: rgb(125 211 252/var(--tw-text-opacity));
+}
+.bg-code-highlight {
+    background-color: rgb(125 211 252/.1);
+}
+@tailwind utilities;
+
+
