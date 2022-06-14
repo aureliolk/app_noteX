@@ -51,14 +51,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       }
   }
   const user: any = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET as any) 
-  const listNotes =  await axios.get(`${process.env.BASE_URL}/api/notes/?id=${user.id}`)
-  const notes = listNotes.data.listNotes
-  if(!notes){
-    return {
-      props: { ...user }
-  }  
-  }
+  // const listNotes =  await axios.get(`${process.env.BASE_URL}/api/notes/?id=${user.id}`)
+  // const notes = listNotes.data.listNotes
+  // if(!notes){
+  //   return {
+  //     props: { ...user }
+  // }  
+  // }
   return {
-      props: { ...user, notes }
+      props: { ...user }
   }
 }
