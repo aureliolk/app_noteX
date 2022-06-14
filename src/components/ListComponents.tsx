@@ -1,17 +1,8 @@
+import { NotesProps, UserProps } from "../pages"
 import { Auth } from "./AuthComponents"
 import { Notes } from "./NotesComponents"
 
-export type User = {
-    id?: string
-    firstName?: string
-    lastName?: string
-    email?: string
-    color?: string
-}
-
-export const List = (user: User) => {
-
-
+export const List = (data:UserProps) => {
 
     return (
         <div className="flex flex-col items-center justify-center p-8 ">
@@ -20,9 +11,9 @@ export const List = (user: User) => {
 
             <div className="flex justify-between m-8 p-8  w-full gap-2">
 
-                {user.firstName ? (
+                {data.firstName ? (
                     <div className="w-full ring-1 ring-inset ring-white/10 rounded-xl p-8 ">
-                        <Notes  grid="grid-cols-4" />
+                        <Notes  grid="grid-cols-4" notes={data.notes}  id={data.id}/>
                     </div>
                 ) : (
                     <>

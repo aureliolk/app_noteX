@@ -32,6 +32,7 @@ model Notes {
   title      String?
   notes      String
   color      String
+  bgcolor    String
 
   @@map("notes")
 }

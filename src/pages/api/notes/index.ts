@@ -25,13 +25,14 @@ export default async function handler(
         })
         return
     } else if (method === "POST") {
-        const {id, color, title, notes}:any = req.body
+        const {id, color, title, notes, bgcolor}:any = req.body
         const addNotes = await prisma.notes.create({
             data:{
                 color,
                 notes,
                 title,
-                userId: id
+                bgcolor,
+                userId: id,
             },
             include:{
                 user: true    
@@ -50,7 +51,6 @@ export default async function handler(
         return
     } else if (method === "PATCH") {
         const data = req.body
-        
         const updataNotes = await prisma.notes.update({
             data:{
                 ...data,
@@ -71,7 +71,7 @@ export default async function handler(
          })
         return
     } else if (method === "DELETE") {
-        const {id} = req.body
+        const id:any = req.query.id
         const deleteNotes =  await prisma.notes.delete({
             where:{
                 id

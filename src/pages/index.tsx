@@ -6,19 +6,25 @@ import { List } from '../components/ListComponents'
 import jwt from 'jsonwebtoken';
 const axios = require("axios").default
 
+export type UserProps = {
+  id?: string
+  firstName?: string
+  lastName?: string
+  email?: string
+  color?: string
+  notes?: NotesProps
+}
 
-
-type UserProps = {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  color: string
+export type NotesProps = {
+  id?: string
+  title?: string
+  notes?: string
+  color?: string
+  bgcolor?: string
 }
 
 export function Home(data: UserProps){
 
-  console.log(data.firstName)
   return (
     <div >
       <Head>
@@ -26,10 +32,8 @@ export function Home(data: UserProps){
       </Head>
       <div>
         <Headers firstName={data.firstName} />
-        <List id={data.id} firstName={data.firstName}/>
-
+        <List id={data.id} firstName={data.firstName} notes={data.notes} />
         <div className='h-[100vh]'>
-
         </div>
       </div>
     </div>
@@ -43,15 +47,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { 'c.token': token } = parseCookies(ctx)
   if (!token) {
       return {
-          props: {}
+          props:{}
       }
   }
   const user: any = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET as any) 
-
-  // console.log(user.id)
   const listNotes =  await axios.get(`${process.env.BASE_URL}/api/notes/?id=${user.id}`)
-  const note = listNotes.data.listNotes
-
+  const notes = listNotes.data.listNotes
+  if(!notes){
+    return {
+      props: { ...user }
+  }  
+  }
   return {
       props: { ...user, notes }
   }

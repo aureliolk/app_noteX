@@ -10,9 +10,6 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const data = req.body
-    
-    // return console.log(data)
-
     const findUser = await prisma.user.findUnique({
         where: {
             email: data.email
