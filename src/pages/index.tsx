@@ -23,7 +23,7 @@ export type NotesProps = {
   bgcolor?: string
 }
 
-export function Home(data: UserProps){
+export function Home(data: UserProps) {
 
   return (
     <div >
@@ -46,19 +46,19 @@ export default Home
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { 'c.token': token } = parseCookies(ctx)
   if (!token) {
-      return {
-          props:{}
-      }
+    return {
+      props: {}
+    }
   }
-  const user: any = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET as any) 
-  // const listNotes =  await axios.get(`${process.env.BASE_URL}/api/notes/?id=${user.id}`)
-  // const notes = listNotes.data.listNotes
-  // if(!notes){
-  //   return {
-  //     props: { ...user }
-  // }  
-  // }
-  return {
+  const user: any = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET as any)
+  const listNotes = await axios.get(`${process.env.BASE_URL}/api/notes/?id=${user.id}`)
+  const notes = listNotes.data.listNotes
+  if (!notes) {
+    return {
       props: { ...user }
+    }
+  }
+  return {
+    props: { ...user }
   }
 }

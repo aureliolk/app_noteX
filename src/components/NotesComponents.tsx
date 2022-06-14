@@ -27,13 +27,13 @@ export const Notes = (user: NotesProp) => {
     const [isLoading, setIsLoading] = useState(false)
     const [isUpdate, setIsUpdate] = useState(true)
 
-    useEffect(() => {
-        async function ListNotes() {
-            const listNotes = await axios.get(`/api/notes/?id=${user.id}`)
-            setNotes(listNotes.data.listNotes)
-        }
-        ListNotes()
-    }, [isLoading])
+    // useEffect(() => {
+    //     async function ListNotes() {
+    //         const listNotes = await axios.get(`/api/notes/?id=${user.id}`)
+    //         setNotes(listNotes.data.listNotes)
+    //     }
+    //     ListNotes()
+    // }, [isLoading])
 
     const color = ["text-[#0f172a]", "text-yellow-700", "text-green-700", "text-red-700"]
     function setColorIndex(colorIndex: number) {
