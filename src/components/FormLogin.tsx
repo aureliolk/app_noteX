@@ -1,11 +1,15 @@
 import { Formik } from 'formik';
+import { useRouter } from 'next/router';
 import { setCookie } from 'nookies';
 import { useState } from 'react';
+import { Loading } from './LoadingComponents';
 const axios = require("axios").default
 
 export const FormLogin = () => {
     const [msg, setMsg] = useState("")
     const [status, setStatus] = useState(Number)
+    const [isLoading, setIsLoaging] = useState(false)
+    const router =  useRouter()
 
     return (
         <Formik
@@ -24,6 +28,7 @@ export const FormLogin = () => {
             }}
 
             onSubmit={async (values) => {
+                setIsLoaging(true)
                 const data = {
                     ...values
                 }
@@ -35,6 +40,10 @@ export const FormLogin = () => {
                             setMsg(error.response.data.msg);
                             setStatus(error.response.status);
                         }
+                        setIsLoaging(false)
+                        setTimeout(() => {
+                            setMsg("")
+                        }, 3000);
                         return
                     });
                 setStatus(loginUser.status)
@@ -46,12 +55,14 @@ export const FormLogin = () => {
                     setTimeout(() => {
                         setMsg("")
                     }, 3000);
-                    return
+                    setIsLoaging(false)
+                    router.reload()
                 }
                 setMsg(loginUser.data.msg)
                 setTimeout(() => {
                     setMsg("")
                 }, 3000);
+                setIsLoaging(false)
                 return
             }}
         >
@@ -87,10 +98,10 @@ export const FormLogin = () => {
                     />
                     <div className='text-xs text-red-600'>{errors.password && touched.password && errors.password}</div>
                     <button
-                        className='rounded-md p-2 text-xs text-slate-200 bg-sky-500 font-semibold  hover:shadow-sky-200 hover:bg-sky-400'
+                        className='rounded-md h-9 p-2 text-xs text-slate-200 bg-sky-500 font-semibold  hover:shadow-sky-200 hover:bg-sky-400 flex justify-center items-center'
                         type="submit" disabled={isSubmitting}
                     >
-                        Entrar
+                        {isLoading ? <Loading /> : "Entrar"}
                     </button>
 
                     {status === 400 ? (

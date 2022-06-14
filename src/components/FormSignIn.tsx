@@ -1,12 +1,15 @@
 import { Formik } from 'formik';
+import { useRouter } from 'next/router';
 import { setCookie } from 'nookies';
 import { useState } from 'react';
+import { Loading } from './LoadingComponents';
 const axios = require("axios").default
 
 export const FormSignIn = () => {
     const [msg, setMsg] = useState("")
     const [status, setStatus] = useState(Number)
-    console.log("FormSignIn")
+    const [isLoading, setIsLoaging] = useState(false)
+    const router = useRouter()
 
     return (
         <Formik
@@ -31,7 +34,7 @@ export const FormSignIn = () => {
             }}
 
             onSubmit={async (values) => {
-                console.log("Clicado SignIn")
+                setIsLoaging(true)
                 const data = {
                     ...values
                 }
@@ -43,6 +46,7 @@ export const FormSignIn = () => {
                             setMsg(error.response.data.msg);
                             setStatus(error.response.status);
                         }
+                        setIsLoaging(false)
                         setTimeout(() => {
                             setMsg("")
                         }, 3000);
@@ -54,12 +58,14 @@ export const FormSignIn = () => {
                         maxAge: 60 * 60 * 1  //1 hour
                     })
                     setMsg(loginUser.data.msg)
+                    setIsLoaging(false)
                     setTimeout(() => {
                         setMsg("")
                     }, 3000);
-                    return
+                    router.reload()
                 }
                 setMsg(loginUser.data.msg)
+                setIsLoaging(false)
                 setTimeout(() => {
                     setMsg("")
                 }, 3000);
@@ -131,10 +137,10 @@ export const FormSignIn = () => {
                     {errors.password ? <div className='text-xs text-red-600'>{errors.password}</div> : errors.checkPassword && <div className='text-xs text-red-600'>{errors.checkPassword}</div>}
 
                     <button
-                        className='rounded-md p-2 text-xs text-slate-200 bg-sky-500 font-semibold  hover:shadow-sky-200 hover:bg-sky-400'
+                        className='rounded-md p-2 h-9 text-xs text-slate-200 bg-sky-500 font-semibold  hover:shadow-sky-200 hover:bg-sky-400 flex justify-center items-center'
                         type="submit" disabled={isSubmitting}
                     >
-                        Entrar
+                        {isLoading ? <Loading /> : "Cadastrar"}
                     </button>
 
                     {status === 400 ? (
