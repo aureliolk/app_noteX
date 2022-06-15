@@ -41,10 +41,6 @@ export function Home({id,firstName}: any) {
       <div>
         <Headers  />
         <List  />
-        <div className='h-[100vh]'>
-          {user}
-          {id}
-        </div>
       </div>
     </div>
   )
