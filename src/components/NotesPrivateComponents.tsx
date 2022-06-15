@@ -25,23 +25,24 @@ export const Notes = ({userId, listNotes}:UserId) => {
     const [notes, setNotes] = useState<any>(listNotes)
     const [isLoading, setIsLoading] = useState(false)
 
-    async function GetListNotes(id: any ) {
-        await axios.get('/api/notes', {
-            params: {
-              id
-            }
-          })
-          .then(function (res:any) {
-            setNotes(res.data.listNotes);
-          })
-          .catch(function (error:any) {
-            console.log(error);
-          }) 
-    }
+    useEffect(()=>{
+        async function getListNotes () {
+            await axios.get('/api/notes', {
+                params: {
+                  id: userId
+                }
+              })
+              .then(function (res:any) {
+                setNotes(res.data.listNotes);
+              })
+              .catch(function (error:any) {
+                console.log(error);
+              }) 
+        }
+        getListNotes()
+     },[isLoading])
 
    
-    console.log(notes)
-
     const color = ["text-[#0f172a]", "text-yellow-700", "text-green-700", "text-red-700"]
     function setColorIndex(colorIndex: number) {
         if (colorIndex === 0) {
@@ -96,14 +97,13 @@ export const Notes = ({userId, listNotes}:UserId) => {
                                                 bgcolor: selectBG
                                             })
                                             console.log(udpdateNotes)
-                                            GetListNotes(userId)
                                             setIsLoading(false)
                                             setIsUpdate(true)
                                             return
                                         }}
                                     >
                                         {({
-                                            values,
+                                            values, 
                                             handleChange,
                                             handleBlur,
                                             handleSubmit,
@@ -177,7 +177,6 @@ export const Notes = ({userId, listNotes}:UserId) => {
                                                 bgcolor: selectBG
                                             })
                                             console.log(addNotes)
-                                            GetListNotes(userId)
                                             setIsLoading(false)
                                             setIsForm(false)
                                             return
