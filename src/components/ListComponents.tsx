@@ -13,7 +13,7 @@ export const List = (data:UserProps) => {
 
                 {data.firstName ? (
                     <div className="w-full ring-1 ring-inset ring-white/10 rounded-xl p-8 ">
-                        <Notes  grid="grid-cols-4" notes={data.notes}  id={data.id}/>
+                        {/* <Notes  grid="grid-cols-4"  id={data.id}/> */}
                     </div>
                 ) : (
                     <>

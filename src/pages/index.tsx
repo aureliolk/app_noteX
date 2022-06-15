@@ -4,10 +4,12 @@ import { parseCookies } from 'nookies'
 import { Headers } from '../components/HeaderComponents'
 import { List } from '../components/ListComponents'
 import jwt from 'jsonwebtoken';
+import { useContext } from 'react'
+import { AuthContext } from '../contexts/AuthContext'
 const axios = require("axios").default
 
 export type UserProps = {
-  id?: string
+  id?: any
   firstName?: string
   lastName?: string
   email?: string
@@ -23,7 +25,9 @@ export type NotesProps = {
   bgcolor?: string
 }
 
-export function Home(data: UserProps) {
+export function Home({id}: UserProps) {
+  const {setUser,user} = useContext(AuthContext)
+  setUser(id)
 
   return (
     <div >
@@ -31,9 +35,10 @@ export function Home(data: UserProps) {
         <title>FullStacks Notes</title>
       </Head>
       <div>
-        <Headers firstName={data.firstName} />
-        <List id={data.id} firstName={data.firstName} notes={data.notes} />
+        <Headers  />
+        <List  />
         <div className='h-[100vh]'>
+          {user}
         </div>
       </div>
     </div>
