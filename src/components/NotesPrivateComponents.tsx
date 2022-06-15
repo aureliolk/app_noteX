@@ -25,22 +25,19 @@ export const Notes = ({userId, listNotes}:UserId) => {
     const [notes, setNotes] = useState<any>(listNotes)
     const [isLoading, setIsLoading] = useState(false)
 
-    useEffect(() => {
-        async function getUser() {
-          await axios.get('/api/notes', {
-                params: {
-                  id:userId
-                }
-              })
-              .then(function (res:any) {
-                setNotes(res.data.listNotes);
-              })
-              .catch(function (error:any) {
-                console.log(error);
-              })  
-        }
-        getUser()
-    }, [isLoading])
+    async function GetListNotes(id: any ) {
+        await axios.get('/api/notes', {
+            params: {
+              id
+            }
+          })
+          .then(function (res:any) {
+            setNotes(res.data.listNotes);
+          })
+          .catch(function (error:any) {
+            console.log(error);
+          }) 
+    }
 
    
     console.log(notes)
@@ -99,6 +96,7 @@ export const Notes = ({userId, listNotes}:UserId) => {
                                                 bgcolor: selectBG
                                             })
                                             console.log(udpdateNotes)
+                                            GetListNotes(userId)
                                             setIsLoading(false)
                                             setIsUpdate(true)
                                             return
@@ -179,6 +177,7 @@ export const Notes = ({userId, listNotes}:UserId) => {
                                                 bgcolor: selectBG
                                             })
                                             console.log(addNotes)
+                                            GetListNotes(userId)
                                             setIsLoading(false)
                                             setIsForm(false)
                                             return

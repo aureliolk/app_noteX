@@ -24,6 +24,7 @@ export type NotesProps = {
 }
 
 export function Home({ id, notes }: UserProps) {
+  
 
   return (
     <div >
