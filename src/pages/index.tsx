@@ -2,19 +2,17 @@ import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { parseCookies } from 'nookies'
 import { Headers } from '../components/HeaderComponents'
-import { List } from '../components/ListComponents'
 import jwt from 'jsonwebtoken';
-import { useContext, useEffect } from 'react'
-import { AuthContext } from '../contexts/AuthContext'
+
+import { Notes } from '../components/NotesPrivateComponents';
+import { Auth } from '../components/AuthComponents';
+import { NotesPublicComponents } from '../components/NotesPublicComponents';
+
 const axios = require("axios").default
 
 export type UserProps = {
-  id?: any
-  firstName?: string
-  lastName?: string
-  email?: string
-  color?: string
-  notes?: NotesProps
+  id: string | undefined
+  notes: NotesProps
 }
 
 export type NotesProps = {
@@ -25,13 +23,7 @@ export type NotesProps = {
   bgcolor?: string
 }
 
-export function Home({id,firstName}: any) {
-  const {setUser,user,setUserId, userId} = useContext(AuthContext)
-  
-  useEffect(()=>{
-    setUserId(id)
-    setUser(firstName)
-  },[])
+export function Home({ id, notes }: UserProps) {
 
   return (
     <div >
@@ -39,8 +31,27 @@ export function Home({id,firstName}: any) {
         <title>FullStacks Notes</title>
       </Head>
       <div>
-        <Headers  />
-        <List  />
+        <Headers id={id} />
+      </div>
+      <div className="flex flex-col items-center justify-center p-8 ">
+        <h1 className="text-3xl  font-extrabold tracking-tight text-slate-200">FullStack NoteX</h1>
+        <h3 className="text-base tracking-tight text-slate-200">Adicione e Remova Notas Facilmente</h3>
+        <div className="flex justify-between m-8 p-8  w-full gap-2">
+          {id ? (
+            <div className="w-full ring-1 ring-inset ring-white/10 rounded-xl p-8 ">
+              <Notes userId={id} listNotes={notes} />
+            </div>
+          ) : (
+            <>
+              <div className="w-2/5">
+                <Auth />
+              </div>
+              <div className="w-full ring-1 ring-inset ring-white/10 rounded-xl p-8 rounded-br-none">
+                <NotesPublicComponents />
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )
@@ -57,8 +68,19 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
   const user: any = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET as any)
-  
+  const notes = await axios.get(`${process.env.BASE_URL}/api/notes`, {
+    params: {
+      id: user.id
+    }
+  })
+    .then(function (res: any) {
+      return res.data.listNotes
+    })
+    .catch(function (error: any) {
+      console.log(error);
+    })
+
   return {
-    props: { ...user }
+    props: { ...user, notes }
   }
 }

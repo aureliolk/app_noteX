@@ -2,12 +2,14 @@ import { useContext, useState } from "react"
 import { FaUserCircle } from "react-icons/fa"
 import { destroyCookie } from "nookies"
 import { useRouter } from "next/router"
-import { UserProps } from "../pages"
-import { AuthContext } from "../contexts/AuthContext"
 
-export const Headers = () => {
+
+type UserId = {
+    id: string | undefined
+}
+
+export const Headers = ({id}:UserId) => {
     const [userMenu, setUserMenu] = useState(false)
-    const {user} = useContext(AuthContext)
     const router = useRouter()
     
     async function signOut() {
@@ -25,7 +27,7 @@ export const Headers = () => {
                     <p className=" text-xs leading-5 font-medium text-sky-400 bg-sky-400/10 rounded-full py-1  px-3 hidden xl:flex items-center hover:bg-sky-400/20"><strong>Primeira nota aqui</strong></p>
                 </div>
                 <div className="w-1/5 text-2xl flex justify-end items-center flex-col relative ">
-                    {user && (
+                    {id && (
                         <>
                             <FaUserCircle className={`cursor-pointer ${userMenu ? "text-slate-200" : "text-slate-400"}`} onMouseEnter={() => setUserMenu(true)} />
                             {userMenu && (

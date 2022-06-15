@@ -8,38 +8,38 @@ import { TiArrowBack } from "react-icons/ti"
 import { BsTrashFill } from "react-icons/bs"
 import { NotesProps } from "../pages"
 import { Loading } from "./LoadingComponents"
-import { AuthContext } from "../contexts/AuthContext"
 const axios = require("axios").default;
 
 
-type NotesProp = {
-    id?: string
-    notes?: NotesProps | any
-    grid?: string
+type UserId = {
+    userId: string | undefined
+    listNotes: NotesProps
 }
 
-export const    Notes = () => {
-    const {userId} = useContext(AuthContext)
+export const Notes = ({userId, listNotes}:UserId) => {
     const [selectColor, setSelectColor] = useState<string | undefined>("text-[#0f172a]")
     const [selectBG, setSelectBg] = useState<string | undefined>('bg-slate-800')
     const [isForm, setIsForm] = useState(false)
     const [idButton, setIdButton] = useState<string | undefined>()
     const [isUpdate, setIsUpdate] = useState(true)
-    const [notes, setNotes] = useState<any>()
+    const [notes, setNotes] = useState<any>(listNotes)
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-        async function getUser(id:any) {
-            try {
-                const response = await axios.get(`/api/notes/?id=399c7542-79e5-4e18-aaf1-421a34665a62`);
-                setNotes(response.data.listNotes);
-                return
-            } catch (error) {
-                console.error(error);
-                return
-            }
+        async function getUser() {
+          await axios.get('/api/notes', {
+                params: {
+                  id:userId
+                }
+              })
+              .then(function (res:any) {
+                setNotes(res.data.listNotes);
+              })
+              .catch(function (error:any) {
+                console.log(error);
+              })  
         }
-        getUser(userId)
+        getUser()
     }, [isLoading])
 
    
