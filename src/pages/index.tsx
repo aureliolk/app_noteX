@@ -24,7 +24,7 @@ export type NotesProps = {
 }
 
 export function Home({ id, notes }: UserProps) {
-  
+
 
   return (
     <div >
@@ -80,6 +80,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     .catch(function (error: any) {
       console.log(error);
     })
+
+  if (!notes) {
+    return { props: { ...user } }
+  }
 
   return {
     props: { ...user, notes }
