@@ -6,9 +6,11 @@ import { useRouter } from "next/router"
 
 type UserId = {
     id: string | undefined
+    firstName: string | undefined
+    lastName : string | undefined
 }
 
-export const Headers = ({id}:UserId) => {
+export const Headers = ({id, firstName, lastName}:UserId) => {
     const [userMenu, setUserMenu] = useState(false)
     const router = useRouter()
     
@@ -22,6 +24,9 @@ export const Headers = ({id}:UserId) => {
         <div className="sticky top-0 z-40 backdrop-blur transition-colors duration-500 w-full bg-slate-900/75 border-b border-slate-50/[0.06] py-4" onMouseLeave={() => setUserMenu(false)}>
             <div className="w-11/12 m-auto flex items-center justify-center">
                 <div className="w-1/5">
+                    {id && (
+                        <p className="text-xs leading-5 font-medium text-sky-400 bg-sky-400/10 rounded-full py-1  px-3 hidden xl:flex items-center">Bem vindo {firstName} {lastName} </p>
+                    )}
                 </div>
                 <div className="w-full flex items-center justify-center">
                     <p className=" text-xs leading-5 font-medium text-sky-400 bg-sky-400/10 rounded-full py-1  px-3 hidden xl:flex items-center hover:bg-sky-400/20"><strong>Primeira nota aqui</strong></p>

@@ -12,7 +12,10 @@ const axios = require("axios").default
 
 export type UserProps = {
   id: string | undefined
-  notes: NotesProps
+  notesPrivate: NotesProps
+  notesPublic: NotesProps
+  firstName: string | undefined
+  lastName: string | undefined
 }
 
 export type NotesProps = {
@@ -23,8 +26,8 @@ export type NotesProps = {
   bgcolor?: string
 }
 
-export function Home({ id, notes }: UserProps) {
-
+export function Home({ id, firstName, lastName, notesPrivate, notesPublic }: UserProps) {
+  console.log(notesPublic)
 
   return (
     <div >
@@ -32,7 +35,7 @@ export function Home({ id, notes }: UserProps) {
         <title>FullStacks Notes</title>
       </Head>
       <div>
-        <Headers id={id} />
+        <Headers id={id} firstName={firstName} lastName={lastName } />
       </div>
       <div className="flex flex-col items-center justify-center p-8 ">
         <h1 className="text-3xl  font-extrabold tracking-tight text-slate-200">FullStack NoteX</h1>
@@ -40,7 +43,7 @@ export function Home({ id, notes }: UserProps) {
         <div className="flex justify-between m-8 p-8  w-full gap-2">
           {id ? (
             <div className="w-full ring-1 ring-inset ring-white/10 rounded-xl p-8 ">
-              <Notes userId={id} listNotes={notes} />
+              <Notes userId={id} listNotes={notesPrivate} />
             </div>
           ) : (
             <>
@@ -48,7 +51,7 @@ export function Home({ id, notes }: UserProps) {
                 <Auth />
               </div>
               <div className="w-full ring-1 ring-inset ring-white/10 rounded-xl p-8 rounded-br-none">
-                <NotesPublicComponents />
+                <NotesPublicComponents listNotes={notesPublic} />
               </div>
             </>
           )}
@@ -63,29 +66,35 @@ export default Home
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { 'c.token': token } = parseCookies(ctx)
+  
   if (!token) {
-    return {
-      props: {}
-    }
+    return { props: {} }
   }
+
   const user: any = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET as any)
-  const notes = await axios.get(`${process.env.BASE_URL}/api/notes`, {
-    params: {
-      id: user.id
-    }
+  const notesPrivate = await axios.get(`${process.env.BASE_URL}/api/notes`, {
+    params: { id: user.id }
   })
     .then(function (res: any) {
       return res.data.listNotes
     })
-    .catch(function (error: any) {
-      console.log(error);
-    })
-
-  if (!notes) {
+  if (!notesPrivate) {
     return { props: { ...user } }
   }
 
+  const notesPublic = await axios.get(`${process.env.BASE_URL}/api/notes`, {
+    params: { id: "33642c93-f681-4220-a8cd-53b86fadfedc" } })
+    .then(function (res: any) {
+      return res.data.listNotes
+    })
+
+    console.log(user.id)
+
+  if(!notesPublic){
+    return {props:{...user, notesPrivate}}
+  }  
+
   return {
-    props: { ...user, notes }
+    props: { ...user, notesPrivate, notesPublic }
   }
 }

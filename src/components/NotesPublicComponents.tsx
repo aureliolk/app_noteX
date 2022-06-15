@@ -12,14 +12,14 @@ import { AuthContext } from "../contexts/AuthContext"
 const axios = require("axios").default;
 
 
-type NotesProp = {
-    id?: string
-    notes?: NotesProps | any
-    grid?: string
+type NotesPublicProps = {
+    listNotes: NotesProps
 }
 
-export const NotesPublicComponents = () => {
-    const {userId} = useContext(AuthContext)
+export const NotesPublicComponents = ({ listNotes }: NotesPublicProps) => {
+    console.log(listNotes)
+
+    const userId = "33642c93-f681-4220-a8cd-53b86fadfedc"
     const [selectColor, setSelectColor] = useState<string | undefined>("text-[#0f172a]")
     const [selectBG, setSelectBg] = useState<string | undefined>('bg-slate-800')
     const [isForm, setIsForm] = useState(false)
@@ -28,25 +28,23 @@ export const NotesPublicComponents = () => {
     const [notes, setNotes] = useState<any>()
     const [isLoading, setIsLoading] = useState(false)
 
-    // useEffect(() => {
-    //     async function getUser() {
-    //       await axios.get('/api/notes', {
-    //             params: {
-    //               id:userId
-    //             }
-    //           })
-    //           .then(function (res:any) {
-    //             setNotes(res.data.listNotes);
-    //           })
-    //           .catch(function (error:any) {
-    //             console.log(error);
-    //           })  
-    //     }
-    //     getUser()
-    // }, [isLoading])
+    useEffect(() => {
+        async function getUser() {
+            await axios.get('/api/notes', {
+                params: {
+                    id: userId
+                }
+            })
+                .then(function (res: any) {
+                    setNotes(res.data.listNotes);
+                })
+                .catch(function (error: any) {
+                    console.log(error);
+                })
+        }
+        getUser()
+    }, [isLoading])
 
-   
-    console.log(notes)
 
     const color = ["text-[#0f172a]", "text-yellow-700", "text-green-700", "text-red-700"]
     function setColorIndex(colorIndex: number) {
@@ -84,6 +82,7 @@ export const NotesPublicComponents = () => {
 
     return (
         <div className="w-full ">
+            <h2 className="p-2 text-slate-200 font-bold">Deixa aqui sua nota Publica!</h2>
             <div className={`grid grid-cols-3 gap-4`}>
                 {notes?.map((note: NotesProps) => {
                     return (
@@ -131,7 +130,7 @@ export const NotesPublicComponents = () => {
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
                                                         value={values.notes}
-                                                        className={`${selectColor} text-sm  mt-2 h-full w-full p-1 text-center `}
+                                                        className={`${selectColor} text-sm  mt-2  min-h-[125px] p-1 min-w-[235px] text-center `}
                                                     />
 
                                                     <button type="submit" disabled={isSubmitting} className="absolute bottom-3 right-3 z-10">
@@ -144,7 +143,7 @@ export const NotesPublicComponents = () => {
                                                             )
                                                         })}
                                                     </div>
-                                                    <button type="button" onClick={() => { setIsForm(false),setIsUpdate(true) }} className="absolute bottom-3 left-3 z-10 ">
+                                                    <button type="button" onClick={() => { setIsForm(false), setIsUpdate(true) }} className="absolute bottom-3 left-3 z-10 ">
                                                         <TiArrowBack className={`${selectColor} text-2xl`} />
                                                     </button>
                                                 </form>
@@ -158,7 +157,7 @@ export const NotesPublicComponents = () => {
                                     <div className={`bg-white ${note.color} text-sm text-center mt-2 min-h-[125px] p-1 min-w-[235px]`}>{note.notes}</div>
                                     <div className="flex justify-between items-center mt-1 text-slate-500">
                                         <button type="button" onClick={() => { UpdateNote(note.id), setSelectColor(note.color), setSelectBg(note.bgcolor) }}>{isLoading && note.id === idButton ? <Loading /> : <FaEdit className="text-2x1" />}</button>
-                                        <button type="button" onClick={() => { DeleteNote(note.id) }}>{isLoading && note.id === idButton ? <Loading /> : <BsTrashFill className="text-2x1" />}</button>
+                                        {/* <button type="button" onClick={() => { DeleteNote(note.id) }}>{isLoading && note.id === idButton ? <Loading /> : <BsTrashFill className="text-2x1" />}</button> */}
                                     </div>
                                 </div>
                             )}

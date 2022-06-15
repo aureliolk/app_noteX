@@ -10,15 +10,18 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const data = req.body
+
     const findUser = await prisma.user.findUnique({
         where: {
-            email: data.email
+            email: data.user
         }
     })
-    if(findUser) return res.status(400).json({msg: "Esse email já esta cadastrado"})
+    if(findUser) return res.status(400).json({msg: "Esse usuario já esta cadastrado"})
     const signInUser = await prisma.user.create({
         data:{
             ...data,
+            email: data.user,
+            user:undefined,
             password: await bcrypt.hash(data.password, 10),
             checkPassword: undefined
         },

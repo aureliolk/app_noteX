@@ -13,16 +13,12 @@ export const FormLogin = () => {
 
     return (
         <Formik
-            initialValues={{ email: '', password: '' }}
+            initialValues={{ user: '', password: '' }}
 
             validate={values => {
                 const errors: any = {};
-                if (!values.email) {
-                    errors.email = 'Required';
-                } else if (
-                    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                ) {
-                    errors.email = 'Invalid email address';
+                if (!values.user) {
+                    errors.user = 'Required';
                 }
                 return errors;
             }}
@@ -76,17 +72,18 @@ export const FormLogin = () => {
                 isSubmitting,
                 /* and other goodies */
             }) => (
-                <form onSubmit={handleSubmit} className={"flex flex-col gap-2 text-sm"}>
+                <div>
+                    <form onSubmit={handleSubmit} className={"flex flex-col gap-2 text-sm"}>
                     <input
                         className='code-highlight bg-code-highlight p-2 outline-none'
-                        type="email"
-                        name="email"
-                        placeholder='Email'
+                        type="text"
+                        name="user"
+                        placeholder='Nome de Usuario'
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.email}
+                        value={values.user}
                     />
-                    <div className='text-xs text-red-600'>{errors.email && touched.email && errors.email}</div>
+                    <div className='text-xs text-red-600'>{errors.user}</div>
                     <input
                         className='code-highlight bg-code-highlight p-2 outline-none'
                         type="password"
@@ -110,6 +107,10 @@ export const FormLogin = () => {
                         <div className='text-xs text-green-600'>{msg}</div>
                     )}
                 </form>
+                <div className='py-4 text-center font-bold text-slate-200 '>
+                    <h2>Cadastre-se e guarde sua nota!</h2>
+                </div>
+                </div>
             )}
         </Formik>
     )

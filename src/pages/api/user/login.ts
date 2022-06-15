@@ -14,7 +14,7 @@ export default async function handler(
     const data = req.body
     const findUser = await prisma.user.findUnique({
         where: {
-            email: data.email
+            email: data.user
         }
     })
     if (!findUser) return res.status(400).json({ msg: "E-mail ou Senha não confere!" })
@@ -24,7 +24,9 @@ export default async function handler(
 
     const token = jwt.sign({
         ...findUser,
-        password:undefined
+        password:undefined,
+        email: data.user,
+        user:undefined
     }, process.env.NEXT_PUBLIC_JWT_SECRET as string)
 
     return res.status(200).json({

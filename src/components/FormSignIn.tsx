@@ -13,18 +13,14 @@ export const FormSignIn = () => {
 
     return (
         <Formik
-            initialValues={{ email: '', password: '', firstName: '', lastName: '', checkPassword: '' }}
+            initialValues={{ user: '', password: '', firstName: '', lastName: '', checkPassword: '' }}
 
             validate={values => {
                 const errors: any = {};
                 if (!values.firstName) {
                     errors.firstName = 'Requerido'
-                } else if (!values.email) {
-                    errors.email = 'Requerido';
-                } else if (
-                    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                ) {
-                    errors.email = 'Endereço de email Invalido';
+                } else if (!values.user) {
+                    errors.user = 'Requerido';
                 } else if (!values.password) {
                     errors.password = "Requerido"
                 } else if (values.password !== values.checkPassword) {
@@ -106,14 +102,14 @@ export const FormSignIn = () => {
                     {errors.firstName && <div className='text-xs text-red-600'>{errors.firstName}</div>}
                     <input
                         className='code-highlight bg-code-highlight p-2 outline-none'
-                        type="email"
-                        name="email"
-                        placeholder='Email'
+                        type="text"
+                        name="user"
+                        placeholder='Nome de Usuario'
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.email}
+                        value={values.user}
                     />
-                    {errors.email && <div className='text-xs text-red-600'>{errors.email}</div>}
+                    {errors.user && <div className='text-xs text-red-600'>{errors.user}</div>}
                     <div className='flex justify-between items-center'>
                         <input
                             className='code-highlight bg-code-highlight p-2 outline-none w-1/2'
