@@ -1,6 +1,6 @@
 
 import { Formik } from "formik"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AiFillPlusCircle } from "react-icons/ai"
 import { RiCheckboxBlankCircleFill } from "react-icons/ri"
 import { FaTelegramPlane, FaEdit } from "react-icons/fa"
@@ -8,7 +8,9 @@ import { TiArrowBack } from "react-icons/ti"
 import { BsTrashFill } from "react-icons/bs"
 import { NotesProps } from "../pages"
 import { Loading } from "./LoadingComponents"
-const axios = require("axios").default
+import { AuthContext } from "../contexts/AuthContext"
+const axios = require("axios").default;
+
 
 type NotesProp = {
     id?: string
@@ -16,24 +18,17 @@ type NotesProp = {
     grid?: string
 }
 
-export const    Notes = (user: NotesProp) => {
-    // console.log(data.id)
-
+export const    Notes = () => {
+    const {userId,notes} = useContext(AuthContext)
     const [selectColor, setSelectColor] = useState<string | undefined>("text-[#0f172a]")
     const [selectBG, setSelectBg] = useState<string | undefined>('bg-slate-800')
     const [isForm, setIsForm] = useState(false)
-    const [notes, setNotes] = useState(user.notes)
     const [idButton, setIdButton] = useState<string | undefined>()
     const [isLoading, setIsLoading] = useState(false)
     const [isUpdate, setIsUpdate] = useState(true)
 
-    // useEffect(() => {
-    //     async function ListNotes() {
-    //         const listNotes = await axios.get(`/api/notes/?id=${user.id}`)
-    //         setNotes(listNotes.data.listNotes)
-    //     }
-    //     ListNotes()
-    // }, [isLoading])
+   
+    console.log(notes)
 
     const color = ["text-[#0f172a]", "text-yellow-700", "text-green-700", "text-red-700"]
     function setColorIndex(colorIndex: number) {
@@ -71,10 +66,10 @@ export const    Notes = (user: NotesProp) => {
 
     return (
         <div className="w-full ">
-            <div className={`grid ${user.grid} gap-4`}>
+            <div className={`grid grid-cols-4 gap-4`}>
                 {notes?.map((note: NotesProps) => {
                     return (
-                        <>
+                        <div key={note.id}>
                             {isForm && note.id === idButton ? (
                                 <>
                                     <Formik
@@ -149,7 +144,7 @@ export const    Notes = (user: NotesProp) => {
                                     </div>
                                 </div>
                             )}
-                        </>
+                        </div>
                     )
                 })}
                 {isUpdate && (
@@ -162,7 +157,7 @@ export const    Notes = (user: NotesProp) => {
                                         onSubmit={async (values) => {
                                             setIsLoading(true)
                                             const addNotes = await axios.post("/api/notes", {
-                                                id: user.id,
+                                                id: userId,
                                                 title: values.title,
                                                 notes: values.notes,
                                                 color: selectColor,

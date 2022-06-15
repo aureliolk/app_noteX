@@ -4,7 +4,7 @@ import { parseCookies } from 'nookies'
 import { Headers } from '../components/HeaderComponents'
 import { List } from '../components/ListComponents'
 import jwt from 'jsonwebtoken';
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 const axios = require("axios").default
 
@@ -25,9 +25,13 @@ export type NotesProps = {
   bgcolor?: string
 }
 
-export function Home({id}: UserProps) {
-  const {setUser,user} = useContext(AuthContext)
-  setUser(id)
+export function Home({id,firstName}: any) {
+  const {setUser,user,setUserId, userId} = useContext(AuthContext)
+  
+  useEffect(()=>{
+    setUserId(id)
+    setUser(firstName)
+  },[])
 
   return (
     <div >
@@ -39,6 +43,7 @@ export function Home({id}: UserProps) {
         <List  />
         <div className='h-[100vh]'>
           {user}
+          {id}
         </div>
       </div>
     </div>
@@ -57,13 +62,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
   const user: any = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET as any)
   
-  // const listNotes = await axios.get(`${process.env.BASE_URL}/api/notes/?id=${user.id}`)
-  // const notes = listNotes.data.listNotes
-  // if (!notes) {
-  //   return {
-  //     props: { ...user }
-  //   }
-  // }
   return {
     props: { ...user }
   }
